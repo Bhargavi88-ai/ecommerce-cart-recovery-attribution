@@ -61,3 +61,4 @@ If the same campaign variant was already dispatched to this cart, the attempt is
 | `DUPLICATE_CAMPAIGN` | The cart has already received this exact campaign variant. |
 | `CART_NOT_ABANDONED` | Inactivity period was not satisfied at evaluation time. |
 | `INVALID_CONTACT` | Recipient email address or phone number is syntactically malformed. |
+

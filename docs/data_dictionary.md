@@ -212,3 +212,4 @@ Explicitly labeled anomaly fixture records for system testing and validation aud
 | `expected_decision` | VARCHAR(128)| NO| - | Policy string | What rule engine was supposed to decide. |
 | `actual_decision` | VARCHAR(128)| NO | - | Policy string | What erroneous action occurred. |
 | `resolution_status` | VARCHAR(32)| NO | - | `DETECTED`, `RESOLVED`, `IGNORED` | Lifecycle status of exception investigation. |
+

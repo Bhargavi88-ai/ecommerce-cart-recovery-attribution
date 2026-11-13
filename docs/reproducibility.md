@@ -64,3 +64,4 @@ This script:
 ```
 
 Any run with the same seed and scale produces identical output files with zero discrepancy.
+

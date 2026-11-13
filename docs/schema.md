@@ -210,3 +210,4 @@ CREATE TABLE anomaly_records (
 );
 CREATE INDEX ix_anomalies_issue_entity ON anomaly_records(issue_type, affected_entity);
 ```
+

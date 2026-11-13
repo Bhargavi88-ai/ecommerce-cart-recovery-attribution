@@ -79,3 +79,4 @@ Section 10 of the system specification mandates the injection and detection of 4
   HAVING ABS(c.total_amount - (SUM(cl.total_price) - c.discount_total)) > 0.01;
   ```
 - **Resolution Path:** Recalculate and update `total_amount = sum(cart_lines.total_price)`, and mark anomaly `RESOLVED`.
+

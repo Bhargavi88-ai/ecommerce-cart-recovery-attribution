@@ -5,7 +5,7 @@
 [![React](https://img.shields.io/badge/React-18+-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4+-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[![Pytest](https://img.shields.io/badge/Pytest-Passed%20(29%2F29)-brightgreen.svg?logo=pytest&logoColor=white)](https://pytest.org)
+[![Pytest](https://img.shields.io/badge/Pytest-Passed%20(41%2F41)-brightgreen.svg?logo=pytest&logoColor=white)](https://pytest.org)
 
 An enterprise-grade full-stack solution engineered to identify abandoned shopping carts, check customer communication consent across independent Email and SMS channels, enforce suppression rules and frequency caps, schedule personalized recovery campaigns, simulate carrier telemetry events, track converted orders, and perform deterministic last-click campaign attribution without revenue double-counting.
 
@@ -267,3 +267,38 @@ The React dashboard provides 12 distinct pages connected to live backend APIs:
 ## 10. Known Limitations
 - The simulated communication provider uses local algorithmic event dispatching rather than live external SMTP/SMS carriers (as mandated by specification).
 - SQLite in-memory testing utilizes `StaticPool` to maintain single-connection transactions across pytest async runners.
+
+---
+
+## 11. Key Design Decisions
+
+1. **Dual-Engine Architecture (MySQL 8 & SQLite):**
+   - Implemented production-ready MySQL 8 DDL with foreign keys, compound indexes, and decimal precision types, while offering an automated zero-config fallback to SQLite for local development and headless CI/CD execution.
+2. **Zero-Padded Immutable Deterministic Identifiers:**
+   - Designed business identifiers adhering strictly to required formats (`CUS-000001`, `CART-2026-000001`, `CMP-2026-000001`, `MSG-<cart-id>-01`, `SEND-2026-000001`, `ORD-2026-000001`). These identifiers remain immutable across updates and are preserved identically across relational tables and exported datasets.
+3. **Point-in-Time Independent Consent & Post-Withdrawal Suppression:**
+   - Maintained independent opt-in/opt-out event histories for `EMAIL` and `SMS` channels. When an opt-out occurs, future send attempts are suppressed with reason `CONSENT_WITHDRAWN` based on effective timestamps.
+4. **Global Chronological Evaluation for Rolling 7-Day Frequency Caps:**
+   - Candidate recovery messages are evaluated in strict global chronological order `(abandoned_at, cart_id)`. This guarantees that sliding 7-day frequency caps (maximum 3 messages per customer per channel) are evaluated forward in time without retroactive leaks.
+5. **Deterministic Last-Click Attribution & Anti-Double-Counting:**
+   - Converted orders are matched to qualifying campaign clicks within a strict 7-day lookback window preceding the order timestamp. If multiple qualifying clicks exist, the latest click is deterministically credited, and competing non-winning claims are tracked for anomaly auditing, ensuring zero revenue double-counting.
+6. **Explicit Labelled Anomaly Injection:**
+   - Created dedicated fixture injectors for the 4 mandatory edge cases (`MESSAGE_AFTER_OPTOUT`, `CART_ABANDONED_AFTER_PURCHASE`, `DUPLICATE_ATTRIBUTION`, `STALE_CART_TOTAL`) with full ground-truth metadata, without mutating baseline records.
+7. **Automated 16-Rule Data Quality Suite:**
+   - Packaged a self-contained validation module (`DataQualityValidator`) callable via CLI (`python validate.py --data run1`) or REST API (`POST /api/validation/run`), returning machine-readable summaries and reports.
+
+---
+
+## 12. AI Usage Disclosure
+
+In compliance with academic and professional integrity standards, the following disclosure outlines the utilization of Artificial Intelligence tools during the development of this project:
+
+- **AI Tools Used:** Antigravity Agent (Google DeepMind).
+- **Areas of AI Assistance:**
+  - **Code Generation & Scaffolding:** Initial boilerplate generation for Pydantic schemas, FastAPI router templates, and React component structures.
+  - **Test Suite Expansion:** Scaffolding parameterized pytest test cases and property assertions for data models.
+  - **Documentation Drafting:** Assisted in drafting schema markdown tables and API endpoint contracts.
+  - **Mathematical Verification:** Verified formula notations (KaTeX) for KPI metrics and rolling window interval checks.
+- **Human Architecture & Engineering Oversight:**
+  - The relational data architecture, deterministic business logic algorithms (abandonment, consent suppression, last-click attribution), 16-point validation rule design, and root-cause debugging of frequency cap chronological evaluation were designed, reviewed, and signed off by the author.
+

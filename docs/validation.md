@@ -32,3 +32,4 @@ The automated validation module (`app.validation.validator`) evaluates in-memory
 ### 3. Generated Artifacts
 1. **`validation_summary.json`:** Structured report containing overall status (`PASS` / `FAIL_WITH_WARNINGS`), pass/fail counts, and violation tallies.
 2. **`validation_report.csv`:** Tabular report listing every rule and specific violation messages for audit logging.
+

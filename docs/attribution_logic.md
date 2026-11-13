@@ -39,3 +39,4 @@ When multiple campaign clicks qualify for the same order:
 For every attributed order, the conversion latency is tracked in elapsed whole hours:
 $$\text{latency\_hours} = \left\lfloor \frac{t_{\text{order}} - t_{\text{qualifying\_click}}}{3600\text{ seconds}} \right\rfloor$$
 This provides visibility into customer decision turnaround across email vs SMS campaigns.
+
