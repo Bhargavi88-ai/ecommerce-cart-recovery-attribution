@@ -55,3 +55,23 @@ def test_purchased_cart_never_abandoned():
     )
     # is_purchased = True
     assert engine.is_cart_abandoned(cart, reference_time=now, has_lines=True, is_purchased=True) is False
+
+
+def test_recovered_cart_never_abandoned():
+    engine = AbandonmentDetectionEngine(inactivity_minutes=60)
+    now = datetime(2026, 10, 1, 12, 0, 0, tzinfo=timezone.utc)
+    cart = Cart(
+        cart_id="CART-2026-000006",
+        status="RECOVERED",
+        last_activity_at=now - timedelta(hours=5),
+        recovered_at=now - timedelta(hours=1)
+    )
+    assert engine.is_cart_abandoned(cart, reference_time=now, has_lines=True, is_purchased=False) is False
+
+
+def test_abandonment_timestamp_calculation():
+    engine = AbandonmentDetectionEngine(inactivity_minutes=60)
+    last_act = datetime(2026, 10, 5, 10, 30, 0, tzinfo=timezone.utc)
+    abandoned_at = engine.calculate_abandonment_timestamp(last_act)
+    assert abandoned_at == datetime(2026, 10, 5, 11, 30, 0, tzinfo=timezone.utc)
+

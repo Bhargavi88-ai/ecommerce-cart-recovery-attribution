@@ -46,3 +46,24 @@ def test_click_after_order_never_attributed():
 
     winner, _ = engine.find_qualifying_attribution(order_time, clicks)
     assert winner is None
+
+
+def test_competing_campaigns_non_double_counting():
+    engine = AttributionEngine(attribution_window_days=7)
+    order_time = datetime(2026, 10, 10, 15, 0, 0, tzinfo=timezone.utc)
+
+    # 4 clicks on same day but distinct hours
+    clicks = [
+        {"send_id": "S1", "campaign_id": "CMP-1", "clicked_at": order_time - timedelta(hours=10)},
+        {"send_id": "S2", "campaign_id": "CMP-2", "clicked_at": order_time - timedelta(hours=3)},  # WINNER
+        {"send_id": "S3", "campaign_id": "CMP-3", "clicked_at": order_time - timedelta(hours=8)},
+        {"send_id": "S4", "campaign_id": "CMP-4", "clicked_at": order_time - timedelta(hours=5)},
+    ]
+
+    winner, competing = engine.find_qualifying_attribution(order_time, clicks)
+    assert winner["send_id"] == "S2"
+    assert winner["campaign_id"] == "CMP-2"
+    assert len(competing) == 3
+    # Ensure winning click is NOT in competing list
+    assert "S2" not in [c["send_id"] for c in competing]
+

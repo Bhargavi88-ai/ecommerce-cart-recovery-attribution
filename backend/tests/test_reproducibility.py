@@ -23,3 +23,4 @@ def test_generator_deterministic_reproducibility():
         assert data1["carts"][i]["cart_id"] == data2["carts"][i]["cart_id"]
         assert data1["carts"][i]["status"] == data2["carts"][i]["status"]
         assert data1["carts"][i]["total_amount"] == data2["carts"][i]["total_amount"]
+

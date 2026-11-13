@@ -19,3 +19,4 @@ def test_validation_suite_on_dataset(test_dataset):
     assert rule_map["duplicate_attribution_detection"]["status"] == "PASS"
     assert rule_map["cart_total_reconciliation"]["status"] == "PASS"
     assert rule_map["event_chronology"]["status"] == "PASS"
+

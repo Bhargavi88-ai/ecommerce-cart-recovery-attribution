@@ -34,3 +34,4 @@ def test_order_id_formatting():
 
 def test_product_id_formatting():
     assert product_id(1) == "PRD-000001"
+
