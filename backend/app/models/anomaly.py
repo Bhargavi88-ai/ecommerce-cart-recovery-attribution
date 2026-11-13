@@ -22,3 +22,4 @@ class AnomalyRecord(Base):
     __table_args__ = (
         Index("ix_anomalies_issue_entity", "issue_type", "affected_entity"),
     )
+

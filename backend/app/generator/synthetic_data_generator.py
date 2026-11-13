@@ -466,6 +466,7 @@ class SyntheticDataGenerator:
 
         # Limit attempts to match target_sends approximately
         candidate_sample = abandoned_candidates[:int(self.target_sends * 1.35)]
+        candidate_sample.sort(key=lambda c: (c["abandoned_at"], c["cart_id"]))
 
         send_idx = 0
         for cart in candidate_sample:
@@ -822,3 +823,4 @@ class SyntheticDataGenerator:
                 "actual_decision": attr["campaign_id"],
                 "ground_truth_label": "VALID_LAST_CLICK_CONVERSION"
             })
+

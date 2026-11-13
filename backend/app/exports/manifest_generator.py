@@ -40,8 +40,8 @@ class ManifestGenerator:
         target_files = [
             "customers.csv", "products.csv", "consents.csv", "sessions.csv",
             "carts.csv", "cart_lines.csv", "campaigns.csv", "message_templates.csv",
-            "send_attempts.csv", "orders.csv", "attributions.csv",
-            "ground_truth.csv", "ground_truth.json",
+            "send_attempts.csv", "communication_events.csv", "orders.csv", "order_lines.csv",
+            "attributions.csv", "ground_truth.csv", "ground_truth.json",
             "validation_summary.json", "validation_report.csv", "seed.sql"
         ]
 
@@ -60,7 +60,7 @@ class ManifestGenerator:
             "generator_version": "2.0.0",
             "scale": scale,
             "seed": seed,
-            "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+            "generated_at_utc": "2026-10-22T00:00:00Z",
             "provenance": {
                 "author": "Antigravity Solution Architecture",
                 "rules": "E-Commerce Inactivity Abandonment + Multi-Channel Consent & Frequency Capping + Last-Click Attribution",
@@ -70,3 +70,4 @@ class ManifestGenerator:
             "files": manifest_files
         }
         return manifest
+

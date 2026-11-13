@@ -37,3 +37,4 @@ class SendAttemptDetail(SendAttemptBase):
 class SendAttemptListResponse(BaseModel):
     total: int
     items: List[SendAttemptBase]
+

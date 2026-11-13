@@ -21,3 +21,4 @@ class Consent(Base):
     __table_args__ = (
         Index("ix_consents_customer_channel_effective", "customer_id", "channel", "effective_at"),
     )
+

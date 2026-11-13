@@ -23,3 +23,4 @@ class CustomerDetail(CustomerBase):
 class CustomerListResponse(BaseModel):
     total: int
     items: List[CustomerBase]
+

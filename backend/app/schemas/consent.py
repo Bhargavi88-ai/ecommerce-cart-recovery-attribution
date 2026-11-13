@@ -18,3 +18,4 @@ class ConsentBase(BaseModel):
 class ConsentListResponse(BaseModel):
     total: int
     items: List[ConsentBase]
+

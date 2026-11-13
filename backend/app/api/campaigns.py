@@ -53,3 +53,4 @@ def get_campaign(c_id: str, db: Session = Depends(get_db)):
     if not campaign:
         raise HTTPException(status_code=404, detail="Campaign not found")
     return campaign
+

@@ -139,3 +139,4 @@ export const AnomalyManagement: React.FC = () => {
     </div>
   );
 };
+

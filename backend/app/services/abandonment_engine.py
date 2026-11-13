@@ -57,3 +57,4 @@ class AbandonmentDetectionEngine:
         if is_suppressed:
             return "SUPPRESSED"
         return "ELIGIBLE"
+

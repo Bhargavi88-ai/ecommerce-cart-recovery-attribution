@@ -16,3 +16,4 @@ class Product(Base):
     # Relationships
     cart_lines = relationship("CartLine", back_populates="product")
     order_lines = relationship("OrderLine", back_populates="product")
+

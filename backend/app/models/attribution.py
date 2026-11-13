@@ -28,3 +28,4 @@ class Attribution(Base):
     __table_args__ = (
         Index("ix_attributions_campaign_order_time", "campaign_id", "order_timestamp"),
     )
+

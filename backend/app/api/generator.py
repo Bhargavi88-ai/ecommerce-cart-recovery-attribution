@@ -76,3 +76,4 @@ def trigger_generation(req: GeneratorRunRequest, background_tasks: BackgroundTas
 def get_generator_status():
     global _generator_state
     return _generator_state
+

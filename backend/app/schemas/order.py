@@ -33,3 +33,4 @@ class OrderDetail(OrderBase):
 class OrderListResponse(BaseModel):
     total: int
     items: List[OrderBase]
+

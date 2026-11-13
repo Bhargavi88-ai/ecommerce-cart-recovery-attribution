@@ -26,3 +26,4 @@ def list_attributions(
     total = query.count()
     items = query.order_by(Attribution.order_timestamp.desc()).offset(skip).limit(limit).all()
     return {"total": total, "items": items}
+

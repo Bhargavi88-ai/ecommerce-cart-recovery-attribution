@@ -43,3 +43,4 @@ def update_anomaly_status(
     db.commit()
     db.refresh(ano)
     return ano
+

@@ -53,3 +53,4 @@ class AttributionEngine:
     def calculate_latency_hours(self, clicked_at: datetime, order_timestamp: datetime) -> int:
         delta = order_timestamp - clicked_at
         return max(0, int(delta.total_seconds() // 3600))
+

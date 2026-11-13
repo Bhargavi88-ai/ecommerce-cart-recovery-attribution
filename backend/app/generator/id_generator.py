@@ -54,3 +54,4 @@ def attribution_id(index: int, year: int = 2026) -> str:
 
 def anomaly_id(index: int) -> str:
     return f"ANO-{index:06d}"
+

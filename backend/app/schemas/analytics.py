@@ -49,3 +49,4 @@ class CampaignPerformanceMetric(BaseModel):
     conversions: int
     revenue: float
     conversion_rate: float
+

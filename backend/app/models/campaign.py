@@ -35,3 +35,4 @@ class MessageTemplate(Base):
     # Relationships
     campaign = relationship("Campaign", back_populates="templates")
     send_attempts = relationship("SendAttempt", back_populates="template")
+

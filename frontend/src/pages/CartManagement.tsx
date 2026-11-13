@@ -247,3 +247,4 @@ export const CartManagement: React.FC = () => {
     </div>
   );
 };
+

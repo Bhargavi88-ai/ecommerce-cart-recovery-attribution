@@ -97,3 +97,4 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate }) => 
     </aside>
   );
 };
+

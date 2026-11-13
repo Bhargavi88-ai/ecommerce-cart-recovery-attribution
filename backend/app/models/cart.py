@@ -54,3 +54,4 @@ class CartLine(Base):
     __table_args__ = (
         Index("ix_cart_lines_cart_product", "cart_id", "product_id"),
     )
+

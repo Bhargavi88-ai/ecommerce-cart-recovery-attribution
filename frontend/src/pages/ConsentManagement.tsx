@@ -171,3 +171,4 @@ export const ConsentManagement: React.FC = () => {
     </div>
   );
 };
+

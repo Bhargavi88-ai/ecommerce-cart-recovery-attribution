@@ -38,3 +38,4 @@ class OrderLine(Base):
     # Relationships
     order = relationship("Order", back_populates="order_lines")
     product = relationship("Product", back_populates="order_lines")
+

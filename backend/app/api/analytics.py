@@ -69,3 +69,4 @@ def get_attribution_analytics(db: Session = Depends(get_db)):
         "total_attributed_revenue": svc.get_overview_kpis()["recovered_revenue"],
         "campaign_attribution": svc.get_campaign_performance_list()
     }
+

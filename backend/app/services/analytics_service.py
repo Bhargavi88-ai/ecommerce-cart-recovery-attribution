@@ -163,3 +163,4 @@ class AnalyticsService:
                 "conversion_rate": conv_rate
             })
         return metrics
+

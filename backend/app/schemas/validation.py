@@ -39,3 +39,4 @@ class ValidationSummaryResponse(BaseModel):
     total_violations: int
     overall_status: str
     rule_results: List[RuleResultSchema]
+

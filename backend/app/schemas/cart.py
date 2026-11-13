@@ -39,3 +39,4 @@ class CartDetail(CartBase):
 class CartListResponse(BaseModel):
     total: int
     items: List[CartBase]
+

@@ -39,7 +39,9 @@ class DatasetExporter:
             ("campaigns", dataset.get("campaigns", [])),
             ("message_templates", dataset.get("message_templates", [])),
             ("send_attempts", dataset.get("send_attempts", [])),
+            ("communication_events", dataset.get("communication_events", [])),
             ("orders", dataset.get("orders", [])),
+            ("order_lines", dataset.get("order_lines", [])),
             ("attributions", dataset.get("attributions", [])),
             ("ground_truth", dataset.get("ground_truth", [])),
         ]
@@ -108,3 +110,4 @@ class DatasetExporter:
                     f"VALUES ('{c['campaign_id']}', '{c['name'].replace("'", "''")}', '{c['channel']}', "
                     f"{c['trigger_delay_minutes']}, {c['discount_percent']}, 1, '{c['created_at'].strftime('%Y-%m-%d %H:%M:%S')}');\n"
                 )
+

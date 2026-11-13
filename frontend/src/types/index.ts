@@ -200,3 +200,4 @@ export interface ValidationSummary {
   overall_status: string;
   rule_results: RuleResult[];
 }
+

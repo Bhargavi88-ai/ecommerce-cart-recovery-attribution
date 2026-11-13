@@ -28,3 +28,4 @@ def list_consents(
     total = query.count()
     items = query.order_by(Consent.effective_at.desc()).offset(skip).limit(limit).all()
     return {"total": total, "items": items}
+

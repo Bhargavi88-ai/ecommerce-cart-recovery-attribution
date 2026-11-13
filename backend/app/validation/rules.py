@@ -13,6 +13,8 @@ class ValidationRuleResult:
         return {
             "rule_name": self.rule_name,
             "status": "PASS" if self.passed else "FAIL",
+            "passed": self.passed,
             "error_count": self.error_count,
             "sample_errors": self.errors[:10]
         }
+

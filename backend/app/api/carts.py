@@ -71,3 +71,4 @@ def get_cart(cart_id: str, db: Session = Depends(get_db)):
     if not cart:
         raise HTTPException(status_code=404, detail="Cart not found")
     return cart
+

@@ -18,3 +18,4 @@ class Session(Base):
     # Relationships
     customer = relationship("Customer", back_populates="sessions")
     carts = relationship("Cart", back_populates="session")
+

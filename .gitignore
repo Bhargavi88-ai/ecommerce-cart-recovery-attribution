@@ -48,3 +48,10 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Test runs
+run*/
+a.txt
+b.txt
+
+

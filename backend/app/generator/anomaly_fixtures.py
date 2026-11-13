@@ -100,3 +100,4 @@ class AnomalyFixtureBuilder:
             "actual_decision": "STALE_TOTAL_PERSISTED",
             "resolution_status": "DETECTED"
         }
+

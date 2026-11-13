@@ -38,3 +38,4 @@ class CampaignPersonalizationEngine:
             "cart_recovery_url": recovery_url,
             "campaign_offer": offer_str,
         }
+

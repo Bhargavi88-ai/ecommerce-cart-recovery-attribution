@@ -59,3 +59,4 @@ def get_validation_report():
     with open(summary_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     return data
+

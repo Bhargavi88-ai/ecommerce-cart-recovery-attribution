@@ -34,3 +34,4 @@ class SendAttempt(Base):
         Index("ix_send_attempts_customer_channel_sent", "customer_id", "channel", "sent_at"),
         Index("ix_send_attempts_cart_campaign", "cart_id", "campaign_id"),
     )
+

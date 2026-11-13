@@ -19,3 +19,4 @@ class CommunicationEvent(Base):
     __table_args__ = (
         Index("ix_comm_events_send_type_time", "send_id", "event_type", "timestamp"),
     )
+

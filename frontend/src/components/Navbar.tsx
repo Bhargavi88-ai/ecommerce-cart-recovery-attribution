@@ -34,3 +34,4 @@ export const Navbar: React.FC<NavbarProps> = ({ pageTitle, onRefresh, isRefreshi
     </header>
   );
 };
+

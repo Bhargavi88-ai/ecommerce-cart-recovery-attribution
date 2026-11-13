@@ -23,3 +23,4 @@ class AttributionBase(BaseModel):
 class AttributionListResponse(BaseModel):
     total: int
     items: List[AttributionBase]
+

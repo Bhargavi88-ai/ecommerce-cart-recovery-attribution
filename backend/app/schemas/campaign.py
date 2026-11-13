@@ -43,3 +43,4 @@ class CampaignDetail(CampaignBase):
 class CampaignListResponse(BaseModel):
     total: int
     items: List[CampaignBase]
+

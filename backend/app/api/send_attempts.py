@@ -44,3 +44,4 @@ def get_send_attempt(send_id: str, db: Session = Depends(get_db)):
     if not attempt:
         raise HTTPException(status_code=404, detail="Send attempt not found")
     return attempt
+

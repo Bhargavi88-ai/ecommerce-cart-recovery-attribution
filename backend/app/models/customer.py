@@ -22,3 +22,4 @@ class Customer(Base):
     carts = relationship("Cart", back_populates="customer", cascade="all, delete-orphan")
     orders = relationship("Order", back_populates="customer", cascade="all, delete-orphan")
     send_attempts = relationship("SendAttempt", back_populates="customer", cascade="all, delete-orphan")
+
