@@ -1,0 +1,4 @@
+campaign_id,name,channel,trigger_delay_minutes,discount_percent,is_active,created_at
+CMP-2026-000001,Standard Cart Recovery Email (10% Off),EMAIL,60,10.0,True,2026-10-01 08:00:00
+CMP-2026-000002,Express SMS Flash Recovery (15% Off),SMS,60,15.0,True,2026-10-01 08:00:00
+CMP-2026-000003,VIP Cart Re-engagement Email (15% Off),EMAIL,120,15.0,True,2026-10-01 08:00:00

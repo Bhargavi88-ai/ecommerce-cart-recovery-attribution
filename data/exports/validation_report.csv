@@ -1,0 +1,19 @@
+rule_name,status,error_message
+primary_key_uniqueness,PASS,All records compliant
+foreign_key_integrity,PASS,All records compliant
+missing_required_values,PASS,All records compliant
+enum_validity,PASS,All records compliant
+date_ordering,PASS,All records compliant
+consent_effective_dates,PASS,All records compliant
+lifecycle_transition_validity,PASS,All records compliant
+cart_line_arithmetic,PASS,All records compliant
+cart_total_reconciliation,PASS,All records compliant
+order_total_reconciliation,PASS,All records compliant
+duplicate_send_detection,PASS,All records compliant
+duplicate_attribution_detection,PASS,All records compliant
+frequency_caps,FAIL,Customer CUS-014783 exceeded 7-day cap on channel EMAIL: 4 sends
+frequency_caps,FAIL,Customer CUS-010105 exceeded 7-day cap on channel EMAIL: 4 sends
+frequency_caps,FAIL,Customer CUS-008144 exceeded 7-day cap on channel EMAIL: 4 sends
+attribution_window,PASS,All records compliant
+purchased_cart_suppression,PASS,All records compliant
+event_chronology,PASS,All records compliant

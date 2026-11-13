@@ -1,0 +1,110 @@
+{
+  "validation_timestamp": "2026-11-13T15:47:47.331317+00:00",
+  "total_rules": 16,
+  "passed_rules": 15,
+  "failed_rules": 1,
+  "total_violations": 3,
+  "overall_status": "FAIL_WITH_WARNINGS",
+  "rule_results": [
+    {
+      "rule_name": "primary_key_uniqueness",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "foreign_key_integrity",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "missing_required_values",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "enum_validity",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "date_ordering",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "consent_effective_dates",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "lifecycle_transition_validity",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "cart_line_arithmetic",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "cart_total_reconciliation",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "order_total_reconciliation",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "duplicate_send_detection",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "duplicate_attribution_detection",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "frequency_caps",
+      "status": "FAIL",
+      "error_count": 3,
+      "sample_errors": [
+        "Customer CUS-014783 exceeded 7-day cap on channel EMAIL: 4 sends",
+        "Customer CUS-010105 exceeded 7-day cap on channel EMAIL: 4 sends",
+        "Customer CUS-008144 exceeded 7-day cap on channel EMAIL: 4 sends"
+      ]
+    },
+    {
+      "rule_name": "attribution_window",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "purchased_cart_suppression",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    },
+    {
+      "rule_name": "event_chronology",
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
+    }
+  ]
+}

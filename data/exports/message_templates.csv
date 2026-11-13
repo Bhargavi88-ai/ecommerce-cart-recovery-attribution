@@ -1,0 +1,5 @@
+template_id,campaign_id,channel,variant,subject,body_template,is_active
+TMPL-000001,CMP-2026-000001,EMAIL,A,"Hey {{first_name}}, you left items in your cart!","Hi {{first_name}}, your {{product_name}} is waiting! Complete your order for {{cart_value}} and get {{campaign_offer}}: {{cart_recovery_url}}",True
+TMPL-000002,CMP-2026-000001,EMAIL,B,Don't miss out on {{product_name}} - {{campaign_offer}} inside,"Hello {{first_name}}, your cart worth {{cart_value}} is about to expire. Click here to resume: {{cart_recovery_url}}",True
+TMPL-000003,CMP-2026-000002,SMS,A,,"ShopAlert: {{first_name}}, complete your order of {{product_name}} with {{campaign_offer}}! Tap {{cart_recovery_url}}",True
+TMPL-000004,CMP-2026-000003,EMAIL,A,VIP Special: Finish your order today!,"Dear {{first_name}}, items in your cart ({{product_name}}) are reserved. Use code VIP15 at checkout: {{cart_recovery_url}}",True

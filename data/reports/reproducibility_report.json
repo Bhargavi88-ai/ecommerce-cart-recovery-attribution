@@ -1,0 +1,138 @@
+{
+  "scale": "starter",
+  "seed": 20261022,
+  "all_matched": true,
+  "total_files_tested": 13,
+  "results": [
+    {
+      "file": "customers.csv",
+      "run1_row_count": 1000,
+      "run2_row_count": 1000,
+      "row_count_match": true,
+      "run1_sha256": "70a84cf3ddb1b20f20192ac67461dee42778137b7d23511ec69a7a78b8b5ecaf",
+      "run2_sha256": "70a84cf3ddb1b20f20192ac67461dee42778137b7d23511ec69a7a78b8b5ecaf",
+      "checksum_match": true,
+      "status": "MATCH"
+    },
+    {
+      "file": "products.csv",
+      "run1_row_count": 20,
+      "run2_row_count": 20,
+      "row_count_match": true,
+      "run1_sha256": "b4547f4489b1ae8ab3bc095327e3c6f4ee4cfa82c0e4c9ea8be094342c45268c",
+      "run2_sha256": "b4547f4489b1ae8ab3bc095327e3c6f4ee4cfa82c0e4c9ea8be094342c45268c",
+      "checksum_match": true,
+      "status": "MATCH"
+    },
+    {
+      "file": "consents.csv",
+      "run1_row_count": 2124,
+      "run2_row_count": 2124,
+      "row_count_match": true,
+      "run1_sha256": "e22e5a71b59530a2e6c7e4072460cc4e14215c5108ccb4a4da9e2f88a88c07f2",
+      "run2_sha256": "e22e5a71b59530a2e6c7e4072460cc4e14215c5108ccb4a4da9e2f88a88c07f2",
+      "checksum_match": true,
+      "status": "MATCH"
+    },
+    {
+      "file": "sessions.csv",
+      "run1_row_count": 2000,
+      "run2_row_count": 2000,
+      "row_count_match": true,
+      "run1_sha256": "06452af3f47206b9dbaf40cae333dd9dc32c0b43a920e5b5d843c26fcb07a38c",
+      "run2_sha256": "06452af3f47206b9dbaf40cae333dd9dc32c0b43a920e5b5d843c26fcb07a38c",
+      "checksum_match": true,
+      "status": "MATCH"
+    },
+    {
+      "file": "carts.csv",
+      "run1_row_count": 2000,
+      "run2_row_count": 2000,
+      "row_count_match": true,
+      "run1_sha256": "8bd1e50ca330da71d374e2bc02dbcb187e09a71fca18499f0b042c01bfcb2865",
+      "run2_sha256": "8bd1e50ca330da71d374e2bc02dbcb187e09a71fca18499f0b042c01bfcb2865",
+      "checksum_match": true,
+      "status": "MATCH"
+    },
+    {
+      "file": "cart_lines.csv",
+      "run1_row_count": 3399,
+      "run2_row_count": 3399,
+      "row_count_match": true,
+      "run1_sha256": "ee07855a726fc0c5b4c544b00da800cd25a0176882ddf62d168ba3ac18ba01c4",
+      "run2_sha256": "ee07855a726fc0c5b4c544b00da800cd25a0176882ddf62d168ba3ac18ba01c4",
+      "checksum_match": true,
+      "status": "MATCH"
+    },
+    {
+      "file": "campaigns.csv",
+      "run1_row_count": 3,
+      "run2_row_count": 3,
+      "row_count_match": true,
+      "run1_sha256": "c359763f0253c62151a9dff0d199e18a843efb0ce377a21cebbad036cd5acd7d",
+      "run2_sha256": "c359763f0253c62151a9dff0d199e18a843efb0ce377a21cebbad036cd5acd7d",
+      "checksum_match": true,
+      "status": "MATCH"
+    },
+    {
+      "file": "message_templates.csv",
+      "run1_row_count": 4,
+      "run2_row_count": 4,
+      "row_count_match": true,
+      "run1_sha256": "48939bba0e19a57c6f93154b97e42dfd94d621e25425f01bf8283ca522f60595",
+      "run2_sha256": "48939bba0e19a57c6f93154b97e42dfd94d621e25425f01bf8283ca522f60595",
+      "checksum_match": true,
+      "status": "MATCH"
+    },
+    {
+      "file": "send_attempts.csv",
+      "run1_row_count": 540,
+      "run2_row_count": 540,
+      "row_count_match": true,
+      "run1_sha256": "4b9f4db60b6052ee89a3284fad06073c34c5784e4447f2fd2416ddf97d9662d5",
+      "run2_sha256": "4b9f4db60b6052ee89a3284fad06073c34c5784e4447f2fd2416ddf97d9662d5",
+      "checksum_match": true,
+      "status": "MATCH"
+    },
+    {
+      "file": "orders.csv",
+      "run1_row_count": 523,
+      "run2_row_count": 523,
+      "row_count_match": true,
+      "run1_sha256": "024a0120c30efc3a3fb1825f473d4b77a1fd2f849b4d110be27b6e358a2e06b5",
+      "run2_sha256": "024a0120c30efc3a3fb1825f473d4b77a1fd2f849b4d110be27b6e358a2e06b5",
+      "checksum_match": true,
+      "status": "MATCH"
+    },
+    {
+      "file": "attributions.csv",
+      "run1_row_count": 23,
+      "run2_row_count": 23,
+      "row_count_match": true,
+      "run1_sha256": "917928f9a2169743e34d6e9ef5b389b225965b478f9dbd5ce7da112ea6d8fa74",
+      "run2_sha256": "917928f9a2169743e34d6e9ef5b389b225965b478f9dbd5ce7da112ea6d8fa74",
+      "checksum_match": true,
+      "status": "MATCH"
+    },
+    {
+      "file": "ground_truth.csv",
+      "run1_row_count": 127,
+      "run2_row_count": 127,
+      "row_count_match": true,
+      "run1_sha256": "2c12886d39cce039ee7d5b09b0c752e18b12ef06b84b2b68eca38a45ee6b98af",
+      "run2_sha256": "2c12886d39cce039ee7d5b09b0c752e18b12ef06b84b2b68eca38a45ee6b98af",
+      "checksum_match": true,
+      "status": "MATCH"
+    },
+    {
+      "file": "seed.sql",
+      "run1_row_count": 26,
+      "run2_row_count": 26,
+      "row_count_match": true,
+      "run1_sha256": "fb11b1d415538a2b75db913973de883fd53773bbdf3d371f2468189a8e04a4dd",
+      "run2_sha256": "fb11b1d415538a2b75db913973de883fd53773bbdf3d371f2468189a8e04a4dd",
+      "checksum_match": true,
+      "status": "MATCH"
+    }
+  ]
+}
