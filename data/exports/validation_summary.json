@@ -1,10 +1,10 @@
 {
-  "validation_timestamp": "2026-11-13T15:47:47.331317+00:00",
+  "validation_timestamp": "2026-11-13T16:37:28.327456+00:00",
   "total_rules": 16,
-  "passed_rules": 15,
-  "failed_rules": 1,
-  "total_violations": 3,
-  "overall_status": "FAIL_WITH_WARNINGS",
+  "passed_rules": 16,
+  "failed_rules": 0,
+  "total_violations": 0,
+  "overall_status": "PASS",
   "rule_results": [
     {
       "rule_name": "primary_key_uniqueness",
@@ -80,13 +80,9 @@
     },
     {
       "rule_name": "frequency_caps",
-      "status": "FAIL",
-      "error_count": 3,
-      "sample_errors": [
-        "Customer CUS-014783 exceeded 7-day cap on channel EMAIL: 4 sends",
-        "Customer CUS-010105 exceeded 7-day cap on channel EMAIL: 4 sends",
-        "Customer CUS-008144 exceeded 7-day cap on channel EMAIL: 4 sends"
-      ]
+      "status": "PASS",
+      "error_count": 0,
+      "sample_errors": []
     },
     {
       "rule_name": "attribution_window",

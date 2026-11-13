@@ -4,7 +4,7 @@
   "generator_version": "2.0.0",
   "scale": "full",
   "seed": 20261022,
-  "generated_at_utc": "2026-11-13T15:47:51.367696+00:00",
+  "generated_at_utc": "2026-11-13T16:37:32.466776+00:00",
   "provenance": {
     "author": "Antigravity Solution Architecture",
     "rules": "E-Commerce Inactivity Abandonment + Multi-Channel Consent & Frequency Capping + Last-Click Attribution",
@@ -33,9 +33,9 @@
       "size_bytes": 6552380
     },
     "carts.csv": {
-      "sha256": "d61cb3848a60538fa61b15a1ba5fff504d460847a2d6646a616302ac6b61462b",
+      "sha256": "19249e829ce3d3d930aad332811ce25fd6d053ceb288015247ed7c89c13c3ca8",
       "row_count": 50000,
-      "size_bytes": 8719188
+      "size_bytes": 8719398
     },
     "cart_lines.csv": {
       "sha256": "e7300ea7348f5d5a69f0b6877046b4f98c1073071bda60fb264698d843d5be8e",
@@ -53,39 +53,39 @@
       "size_bytes": 900
     },
     "send_attempts.csv": {
-      "sha256": "9c958e8cb51332d997924a4074a0c3a17833bc938207dc9c2343497ffc0b7c30",
-      "row_count": 13232,
-      "size_bytes": 2253546
+      "sha256": "ba5f7a233dc7f9555317f566fa31e446b86bc1c6fc815e10444cfed922b84470",
+      "row_count": 13202,
+      "size_bytes": 2248298
     },
     "orders.csv": {
-      "sha256": "ee5df999f2b59b7b3723a37eecbbac018d361bf68c706e21a2ccd480269c2120",
-      "row_count": 12615,
-      "size_bytes": 1024724
+      "sha256": "49690da18927396a4bc0e9d0df6b97075a3e04c6abca190638b82c53d6236f0f",
+      "row_count": 12642,
+      "size_bytes": 1026903
     },
     "attributions.csv": {
-      "sha256": "e6037be5c620a1724e8828d6e0c8343e880389720f591300be014f9a31ccbc3a",
-      "row_count": 681,
-      "size_bytes": 111556
+      "sha256": "50e05570d102738d33e8ce56560689ed60b7004991c947560af8df9c7034fbb1",
+      "row_count": 708,
+      "size_bytes": 115971
     },
     "ground_truth.csv": {
-      "sha256": "e844131cb8be6ba631dcdecb87a0f45a4c5e6b7c045bf0d56f66b58091e0046a",
+      "sha256": "6a8034b770385b7fdb21bddd00b0209c7b545a5bafb1bad73da50a913f0a3988",
       "row_count": 154,
-      "size_bytes": 13195
+      "size_bytes": 13152
     },
     "ground_truth.json": {
-      "sha256": "868ae676607e9aecdf5bb3e3768dba31b170c197e24c4ca4e705b0d10fe0ed4d",
+      "sha256": "6e70d696d6e433cbe40e20379c8f648d24649d8450f84ebc3c12a81dbc23f617",
       "row_count": 1234,
-      "size_bytes": 37446
+      "size_bytes": 37403
     },
     "validation_summary.json": {
-      "sha256": "369257e8e83be74e70c846e728eccfc1219ff641a2b7487af9027f5be1353ab8",
-      "row_count": 110,
-      "size_bytes": 2666
+      "sha256": "c8a2b4c9209cde78865fe16e2693a28784c340108be58de9f65fdfa29474893e",
+      "row_count": 106,
+      "size_bytes": 2414
     },
     "validation_report.csv": {
-      "sha256": "1bc9da9d0f67c53c08a8d77565430f28f1f231522339a0830c341e67ab008f58",
-      "row_count": 18,
-      "size_bytes": 1055
+      "sha256": "798ef132a6c028feaf5deb8063433fedd3534468331cc61691b63726c414ee28",
+      "row_count": 16,
+      "size_bytes": 840
     },
     "seed.sql": {
       "sha256": "fb11b1d415538a2b75db913973de883fd53773bbdf3d371f2468189a8e04a4dd",
