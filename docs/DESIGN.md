@@ -51,7 +51,7 @@ The system enforces rigorous full-scale target volumes:
 - **Total Send Attempts:** 13,203 (10,001 `SENT` and 3,202 `SUPPRESSED`)
 - **Orders:** 12,644
 - **Attributions:** 710
-- **Cart Lifecycle & RECOVERED Semantics:** Carts transition across `ACTIVE`, `ABANDONED`, `CAMPAIGN_SCHEDULED`, `ELIGIBLE`, `SUPPRESSED`, and to `RECOVERED` when an order is placed following recovery communication (`recovered_at` timestamp recorded, status set to `RECOVERED`, and subsequent campaign sends suppressed).
+- **Cart Lifecycle:** Carts transition across `ACTIVE`, `ABANDONED`, `CAMPAIGN_SCHEDULED`, `ELIGIBLE`, `SUPPRESSED`, and `RECOVERED`. RECOVERED means the cart was purchased; only 708 of these purchases are attributed to a recovery campaign, and the rest are ordinary purchases.
 
 To test governance and detection pipelines without corrupting normal baseline behavior, exactly **one labelled example** per anomaly category (4 anomalies total) is explicitly injected via `AnomalyFixtureBuilder`, tracked with dedicated `99`-series IDs (`SEND-2026-999901`, `CART-2026-000016`, `ORD-2026-999903`, `CART-2026-000021`):
 1. `MESSAGE_AFTER_OPTOUT`: `SEND-2026-999901` dispatched after consent withdrawal.
@@ -63,10 +63,10 @@ The automated detection suite (`detect_anomalies.py`) evaluates point-in-time st
 
 ### 2.7 Simulated Communication Telemetry
 Delivery, open and click events are generated at fixed target rates chosen for plausibility, not calibrated against real campaign data (no external dataset is used):
-- **Delivery rate:** ~96.03% (9,604 delivered of 10,001 sent).
-- **Open rate:** 55.95% (5,373 opened of 9,604 delivered).
-- **Click-to-open rate:** ~30.26% (1,626 clicked of 5,373 opened). Clicks per delivered message are ~16.9%.
-Abandoned-cart emails typically perform better than ordinary marketing email, but these values sit at the high end. Treat them as illustrative, not as benchmarks.
+- Delivery rate: ~96.03% (9,604 delivered of 10,001 sent).
+- Open rate: 55.95% (5,373 opened of 9,604 delivered).
+- Click-to-open rate: ~30.26% (1,626 clicked of 5,373 opened); about 16.9% of delivered messages are clicked.
+These values sit at the high end for abandoned-cart email, so treat them as illustrative, not as benchmarks.
 
 ### 2.8 Deterministic SQL Seed & Export Strategy
 To enable reproducible database bootstrapping without bloating version control:
