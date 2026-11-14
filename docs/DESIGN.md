@@ -1,0 +1,77 @@
+# System Architecture & Design Decisions
+
+## 1. Domain Problem & Scope
+The **E-Commerce Abandoned Cart Recovery & Campaign Attribution System** addresses the critical operational, legal, and financial challenges associated with customer re-engagement:
+- **Regulatory Compliance:** Strict point-in-time consent evaluation preventing GDPR / TCPA / CAN-SPAM violations.
+- **Brand Protection & Anti-Fatigue:** Strict frequency-capping suppressing message spam.
+- **Margin Protection:** Instant suppression of recovery discounts for already purchased carts.
+- **Attribution Accuracy:** Deterministic Last-Click attribution guaranteeing zero double-counting of converted revenues.
+
+---
+
+## 2. Key Architecture Decisions
+
+### 2.1 Dual-Engine Database Architecture
+- **Production Engine:** MySQL 8 with relational foreign keys, compound indexes (`customer_id`, `created_at`), decimal types for financial totals, and transaction isolation.
+- **Development/Testing Engine:** Portable SQLite with `StaticPool` in-memory mode for zero-dependency pytest execution and rapid CI/CD runs.
+
+### 2.2 Deterministic, Immutable Zero-Padded Business Identifiers
+To prevent database sequence drift across distributed systems and ensure reproducible provenance:
+- Customers: `CUS-000001`
+- Carts: `CART-2026-000001`
+- Campaigns: `CMP-2026-000001`
+- Message Templates: `TMP-2026-000001`
+- Messages: `MSG-CART-2026-000001-01`
+- Send Attempts: `SEND-2026-000001`
+- Orders: `ORD-2026-000001`
+- Attributions: `ATTR-2026-000001`
+
+### 2.3 Independent Channel Consent & Effective Timestamping
+Consent is independently managed for `EMAIL` and `SMS`:
+- Each customer holds independent historical records with `status` (`OPT_IN` vs `OPT_OUT`) and `effective_timestamp`.
+- When evaluating eligibility at attempt timestamp $t$, the system performs a point-in-time lookup of the latest consent active at $t \le \text{attempt\_timestamp}$.
+- Post-withdrawal attempts are immediately suppressed with `CONSENT_WITHDRAWN`.
+
+### 2.4 Frequency Capping & Boundary Convention
+- **Rule:** A maximum of 3 recovery messages per customer per channel may be sent within any rolling 7-day window.
+- **Boundary Convention:** The rolling 7-day window is formally defined as a **closed interval** $[t - 7\text{d}, t]$.
+  - A message sent at $t_0$ is counted in the window for any subsequent send up to and including the exact 7-day boundary $t = t_0 + 7\text{d}$.
+  - Any attempt occurring at $t > t_0 + 7\text{d}$ (e.g. $t_0 + 7\text{d} + 1\text{s}$) sees the earlier message roll out of the window.
+- **Global Chronological Evaluation:** Candidate carts across all customers are sorted globally by `(abandoned_at, cart_id)` prior to dispatch simulation, preventing retroactive forward leaks and guaranteeing 0 frequency cap violations.
+
+### 2.5 Deterministic Last-Click Attribution
+- **Qualifying Criteria:** Only orders placed within 7 days ($168\text{ hours}$) after an eligible campaign `CLICKED` event qualify for attribution ($t_{\text{click}} < t_{\text{order}} \le t_{\text{click}} + 7\text{d}$).
+- **Single Winner Principle:** If multiple campaign clicks precede the order, the latest click is deterministically awarded primary attribution.
+- **Anti-Double-Counting:** Exactly one primary attribution record is created per order. Original competing claims are preserved in audit metadata.
+
+### 2.6 Isolated Labelled Anomaly Injection
+Four production anomalies are explicitly injected via `AnomalyFixtureBuilder` into dedicated fixtures and tracked in `anomaly_records` and `ground_truth.csv`:
+1. `MESSAGE_AFTER_OPTOUT`: Message dispatched after consent withdrawal.
+2. `CART_ABANDONED_AFTER_PURCHASE`: Cart marked abandoned despite completed prior purchase.
+3. `DUPLICATE_ATTRIBUTION`: Two competing campaigns claiming primary conversion on the same order.
+4. `STALE_CART_TOTAL`: Cart total out of sync with calculated sum of line items.
+
+Baseline records remain pristine and unmodified.
+
+---
+
+## 3. Data Quality & Integrity Validation
+The system features an automated 16-point validation suite (`DataQualityValidator`):
+1. `primary_key_uniqueness`
+2. `foreign_key_integrity`
+3. `missing_required_values`
+4. `enum_validity`
+5. `date_ordering`
+6. `consent_effective_dates`
+7. `lifecycle_transition_validity`
+8. `cart_line_arithmetic`
+9. `cart_total_reconciliation`
+10. `order_total_reconciliation`
+11. `duplicate_send_detection`
+12. `duplicate_attribution_detection`
+13. `frequency_caps`
+14. `attribution_window`
+15. `purchased_cart_suppression`
+16. `event_chronology`
+
+All 16 checks pass with 0 errors on generated datasets.

@@ -1,5 +1,5 @@
 {
-  "validation_timestamp": "2026-11-13T16:37:28.327456+00:00",
+  "validation_timestamp": "2026-10-22T00:00:00Z",
   "total_rules": 16,
   "passed_rules": 16,
   "failed_rules": 0,
@@ -9,96 +9,112 @@
     {
       "rule_name": "primary_key_uniqueness",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "foreign_key_integrity",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "missing_required_values",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "enum_validity",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "date_ordering",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "consent_effective_dates",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "lifecycle_transition_validity",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "cart_line_arithmetic",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "cart_total_reconciliation",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "order_total_reconciliation",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "duplicate_send_detection",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "duplicate_attribution_detection",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "frequency_caps",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "attribution_window",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "purchased_cart_suppression",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     },
     {
       "rule_name": "event_chronology",
       "status": "PASS",
+      "passed": true,
       "error_count": 0,
       "sample_errors": []
     }

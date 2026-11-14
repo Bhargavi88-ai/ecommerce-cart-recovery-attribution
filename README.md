@@ -22,7 +22,7 @@ Online e-commerce merchants lose up to 70% of potential revenue to abandoned sho
 **This system solves these challenges** by establishing a deterministic, relational rule engine that:
 - Detects inactivity-based abandonment (configurable, default: 60 minutes).
 - Checks point-in-time independent Email and SMS consent.
-- Enforces rolling 7-day frequency caps (max 3 messages per customer per channel).
+- Enforces rolling 7-day frequency caps (max 3 messages per customer per channel) using a closed interval $[t - 7\text{d}, t]$.
 - Simulates complete provider telemetries (`SEND`, `DELIVERED`, `OPENED`, `CLICKED`, `FAILED`, `BOUNCED`).
 - Implements deterministic Last-Click Attribution within a 7-day window.
 - Injects and detects 4 mandatory production exceptions (`MESSAGE_AFTER_OPTOUT`, `CART_ABANDONED_AFTER_PURCHASE`, `DUPLICATE_ATTRIBUTION`, `STALE_CART_TOTAL`).
@@ -279,7 +279,7 @@ The React dashboard provides 12 distinct pages connected to live backend APIs:
 3. **Point-in-Time Independent Consent & Post-Withdrawal Suppression:**
    - Maintained independent opt-in/opt-out event histories for `EMAIL` and `SMS` channels. When an opt-out occurs, future send attempts are suppressed with reason `CONSENT_WITHDRAWN` based on effective timestamps.
 4. **Global Chronological Evaluation for Rolling 7-Day Frequency Caps:**
-   - Candidate recovery messages are evaluated in strict global chronological order `(abandoned_at, cart_id)`. This guarantees that sliding 7-day frequency caps (maximum 3 messages per customer per channel) are evaluated forward in time without retroactive leaks.
+   - Candidate recovery messages are evaluated in strict global chronological order `(abandoned_at, cart_id)`. The rolling 7-day window is formally defined as the closed interval $[t - 7\text{d}, t]$ (inclusive of boundaries). A send occurring at exact boundary $t = t_0 + 7\text{d}$ is counted in the window; a send at $t > t_0 + 7\text{d}$ (e.g. $t_0 + 7\text{d} + 1\text{s}$) rolls out of the window. This guarantees that sliding 7-day frequency caps are evaluated forward in time without retroactive leaks.
 5. **Deterministic Last-Click Attribution & Anti-Double-Counting:**
    - Converted orders are matched to qualifying campaign clicks within a strict 7-day lookback window preceding the order timestamp. If multiple qualifying clicks exist, the latest click is deterministically credited, and competing non-winning claims are tracked for anomaly auditing, ensuring zero revenue double-counting.
 6. **Explicit Labelled Anomaly Injection:**

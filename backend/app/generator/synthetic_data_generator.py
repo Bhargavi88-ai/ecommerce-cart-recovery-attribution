@@ -703,6 +703,7 @@ class SyntheticDataGenerator:
             "record_id": a1_send_id,
             "entity": "SendAttempt",
             "anomaly_type": "MESSAGE_AFTER_OPTOUT",
+            "issue_type": "MESSAGE_AFTER_OPTOUT",
             "expected_decision": "SUPPRESS_SEND",
             "actual_decision": "DISPATCHED_MESSAGE",
             "ground_truth_label": "UNLAWFUL_SEND_POST_WITHDRAWAL"
@@ -727,6 +728,7 @@ class SyntheticDataGenerator:
             "record_id": a2_cart["cart_id"],
             "entity": "Cart",
             "anomaly_type": "CART_ABANDONED_AFTER_PURCHASE",
+            "issue_type": "CART_ABANDONED_AFTER_PURCHASE",
             "expected_decision": "MARK_RECOVERED",
             "actual_decision": "MARK_ABANDONED",
             "ground_truth_label": "FALSE_ABANDONMENT_AFTER_PURCHASE"
@@ -753,6 +755,7 @@ class SyntheticDataGenerator:
             "record_id": a3_order_id,
             "entity": "Attribution",
             "anomaly_type": "DUPLICATE_ATTRIBUTION",
+            "issue_type": "DUPLICATE_ATTRIBUTION",
             "expected_decision": "SINGLE_PRIMARY_ATTRIBUTION",
             "actual_decision": "DUPLICATE_MULTI_CLAIM",
             "ground_truth_label": "DOUBLE_COUNTED_ORDER_REVENUE"
@@ -775,6 +778,7 @@ class SyntheticDataGenerator:
             "record_id": a4_cart["cart_id"],
             "entity": "Cart",
             "anomaly_type": "STALE_CART_TOTAL",
+            "issue_type": "STALE_CART_TOTAL",
             "expected_decision": "RECONCILE_LINE_SUM",
             "actual_decision": "STALE_TOTAL_PERSISTED",
             "ground_truth_label": "DESYNCHRONIZED_CART_LINE_PRICE"
@@ -797,6 +801,7 @@ class SyntheticDataGenerator:
                 "record_id": cart["cart_id"],
                 "entity": "Cart",
                 "anomaly_type": "NONE_BASELINE",
+                "issue_type": "NONE_BASELINE",
                 "expected_decision": "ABANDONED" if is_abandoned else "ACTIVE",
                 "actual_decision": cart["status"],
                 "ground_truth_label": "QUALIFIED_ABANDONMENT" if is_abandoned else "ORGANIC_ACTIVE"
@@ -808,6 +813,7 @@ class SyntheticDataGenerator:
                 "record_id": send["send_id"],
                 "entity": "SendAttempt",
                 "anomaly_type": "NONE_BASELINE",
+                "issue_type": "NONE_BASELINE",
                 "expected_decision": "DISPATCH" if send["status"] == "SENT" else "SUPPRESS",
                 "actual_decision": send["status"],
                 "ground_truth_label": send["suppression_reason"] or "LEGITIMATE_SEND"
@@ -819,6 +825,7 @@ class SyntheticDataGenerator:
                 "record_id": attr["order_id"],
                 "entity": "Order",
                 "anomaly_type": "NONE_BASELINE",
+                "issue_type": "NONE_BASELINE",
                 "expected_decision": "ATTRIBUTE_LAST_CLICK",
                 "actual_decision": attr["campaign_id"],
                 "ground_truth_label": "VALID_LAST_CLICK_CONVERSION"
