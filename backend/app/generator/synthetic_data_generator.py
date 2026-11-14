@@ -87,7 +87,17 @@ class SyntheticDataGenerator:
 
         # 8. Anomaly Fixtures (The 4 mandatory labeled anomalies)
         anomalies, ground_truth = self._inject_and_record_anomalies(
-            customers, carts, cart_lines, send_attempts, orders, attributions, campaigns
+            customers=customers,
+            carts=carts,
+            cart_lines=cart_lines,
+            send_attempts=send_attempts,
+            orders=orders,
+            order_lines=order_lines,
+            attributions=attributions,
+            campaigns=campaigns,
+            consents=consents,
+            comm_events=comm_events,
+            templates=templates
         )
 
         # 9. Complete Ground Truth Decisions
@@ -668,29 +678,81 @@ class SyntheticDataGenerator:
         cart_lines: List[Dict[str, Any]],
         send_attempts: List[Dict[str, Any]],
         orders: List[Dict[str, Any]],
+        order_lines: List[Dict[str, Any]],
         attributions: List[Dict[str, Any]],
-        campaigns: List[Dict[str, Any]]
+        campaigns: List[Dict[str, Any]],
+        consents: List[Dict[str, Any]],
+        comm_events: List[Dict[str, Any]],
+        templates: List[Dict[str, Any]]
     ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         """
-        Injects the 4 mandatory labeled anomalies without corrupting baseline records:
-        1. MESSAGE_AFTER_OPTOUT
-        2. CART_ABANDONED_AFTER_PURCHASE
-        3. DUPLICATE_ATTRIBUTION
-        4. STALE_CART_TOTAL
+        Injects the 4 mandatory labeled anomalies directly into generated data tables:
+        1. MESSAGE_AFTER_OPTOUT: Real send attempt dispatched post opt-out in send_attempts & consents
+        2. CART_ABANDONED_AFTER_PURCHASE: Real cart marked ABANDONED after completed purchase in carts & orders
+        3. DUPLICATE_ATTRIBUTION: Real order with duplicate primary attribution claims in orders & attributions
+        4. STALE_CART_TOTAL: Real cart with desynchronized total_amount vs cart_lines in carts
         """
         anomalies = []
         ground_truth = []
         ano_counter = 0
 
         # Anomaly 1: MESSAGE_AFTER_OPTOUT
-        # Find a suppressed attempt due to consent withdrawal or force a dispatched message post-withdrawal
         ano_counter += 1
-        a1_cust = customers[10]
+        purchased_cart_set = {o["cart_id"] for o in orders if o.get("cart_id")}
+        unpurchased_carts = [c for c in carts if c["cart_id"] not in purchased_cart_set]
+        a1_cart = unpurchased_carts[10] if len(unpurchased_carts) > 10 else unpurchased_carts[0]
+        a1_cust = next(c for c in customers if c["customer_id"] == a1_cart["customer_id"])
         a1_send_id = send_id(999901)
         optout_time = a1_cust["created_at"] + timedelta(days=2)
         sent_after_optout_time = optout_time + timedelta(hours=5)
 
-        # Inject anomaly record
+        # 1. Inject opt-out consent into consents table
+        consents.append({
+            "consent_id": consent_id(999901),
+            "customer_id": a1_cust["customer_id"],
+            "channel": "EMAIL",
+            "status": "OPT_OUT",
+            "effective_at": optout_time,
+            "source": "FOOTER_UNSUBSCRIBE",
+            "created_at": optout_time
+        })
+
+        # 2. Inject dispatched send attempt into send_attempts table
+        used_campaign_ids = {s["campaign_id"] for s in send_attempts if s["cart_id"] == a1_cart["cart_id"]}
+        available_email_camps = [c for c in campaigns if c["channel"] == "EMAIL" and c["campaign_id"] not in used_campaign_ids]
+        a1_camp = available_email_camps[0] if available_email_camps else campaigns[0]
+        a1_tmpl = next((t for t in templates if t["campaign_id"] == a1_camp["campaign_id"]), templates[0] if templates else None)
+        send_attempts.append({
+            "send_id": a1_send_id,
+            "message_id": message_id(a1_cart["cart_id"], 1),
+            "campaign_id": a1_camp["campaign_id"],
+            "template_id": a1_tmpl["template_id"] if a1_tmpl else "TMPL-000001",
+            "cart_id": a1_cart["cart_id"],
+            "customer_id": a1_cust["customer_id"],
+            "channel": "EMAIL",
+            "status": "SENT",
+            "suppression_reason": None,
+            "scheduled_at": sent_after_optout_time - timedelta(minutes=1),
+            "sent_at": sent_after_optout_time,
+            "created_at": sent_after_optout_time - timedelta(minutes=1)
+        })
+
+        # 3. Inject communication events
+        comm_events.append({
+            "event_id": f"EVT-{a1_send_id}-01",
+            "send_id": a1_send_id,
+            "event_type": "SEND",
+            "timestamp": sent_after_optout_time,
+            "metadata_json": json.dumps({"provider": "SendGrid", "status": "dispatched"})
+        })
+        comm_events.append({
+            "event_id": f"EVT-{a1_send_id}-02",
+            "send_id": a1_send_id,
+            "event_type": "DELIVERED",
+            "timestamp": sent_after_optout_time + timedelta(seconds=14),
+            "metadata_json": json.dumps({"provider": "SendGrid", "status": "delivered"})
+        })
+
         a1 = AnomalyFixtureBuilder.create_message_after_optout(
             counter=ano_counter,
             customer_id=a1_cust["customer_id"],
@@ -716,6 +778,33 @@ class SyntheticDataGenerator:
         purch_time = a2_cart["created_at"] + timedelta(hours=1)
         abandon_after_purch = purch_time + timedelta(hours=2)
 
+        # 1. Inject completed order into orders table
+        orders.append({
+            "order_id": a2_order_id,
+            "customer_id": a2_cart["customer_id"],
+            "cart_id": a2_cart["cart_id"],
+            "total_amount": a2_cart["total_amount"],
+            "order_timestamp": purch_time,
+            "status": "COMPLETED"
+        })
+
+        # 2. Inject matching order lines so order total reconciles
+        c16_lines = [cl for cl in cart_lines if cl["cart_id"] == a2_cart["cart_id"]]
+        for idx, cl in enumerate(c16_lines, 1):
+            order_lines.append({
+                "order_line_id": order_line_id(a2_order_id, idx),
+                "order_id": a2_order_id,
+                "product_id": cl["product_id"],
+                "quantity": cl["quantity"],
+                "unit_price": cl["unit_price"],
+                "total_price": cl["total_price"]
+            })
+
+        # 3. Update cart status to ABANDONED after purchase
+        a2_cart["status"] = "ABANDONED"
+        a2_cart["abandoned_at"] = abandon_after_purch
+        a2_cart["last_activity_at"] = abandon_after_purch - timedelta(minutes=60)
+
         a2 = AnomalyFixtureBuilder.create_cart_abandoned_after_purchase(
             counter=ano_counter,
             cart_id=a2_cart["cart_id"],
@@ -740,7 +829,62 @@ class SyntheticDataGenerator:
         attr_a = attribution_id(999901)
         attr_b = attribution_id(999902)
         camp_a = campaigns[0]["campaign_id"]
-        camp_b = campaigns[1]["campaign_id"]
+        camp_b = campaigns[1]["campaign_id"] if len(campaigns) > 1 else campaigns[0]["campaign_id"]
+        send_a = send_attempts[0]["send_id"]
+        send_b = send_attempts[1]["send_id"] if len(send_attempts) > 1 else send_attempts[0]["send_id"]
+
+        a3_cart = carts[30]
+        a3_order_time = a3_cart["created_at"] + timedelta(days=1)
+
+        # 1. Inject order into orders table
+        orders.append({
+            "order_id": a3_order_id,
+            "customer_id": a3_cart["customer_id"],
+            "cart_id": a3_cart["cart_id"],
+            "total_amount": a3_cart["total_amount"],
+            "order_timestamp": a3_order_time,
+            "status": "COMPLETED"
+        })
+
+        # 2. Inject order lines so order total reconciles
+        c30_lines = [cl for cl in cart_lines if cl["cart_id"] == a3_cart["cart_id"]]
+        for idx, cl in enumerate(c30_lines, 1):
+            order_lines.append({
+                "order_line_id": order_line_id(a3_order_id, idx),
+                "order_id": a3_order_id,
+                "product_id": cl["product_id"],
+                "quantity": cl["quantity"],
+                "unit_price": cl["unit_price"],
+                "total_price": cl["total_price"]
+            })
+
+        # 3. Inject duplicate primary attribution claims into attributions table
+        attributions.append({
+            "attribution_id": attr_a,
+            "order_id": a3_order_id,
+            "send_id": send_a,
+            "campaign_id": camp_a,
+            "cart_id": a3_cart["cart_id"],
+            "order_timestamp": a3_order_time,
+            "qualifying_click_at": a3_order_time - timedelta(hours=4),
+            "latency_hours": 4.0,
+            "attributed_revenue": a3_cart["total_amount"],
+            "model": "LAST_CLICK",
+            "created_at": a3_order_time
+        })
+        attributions.append({
+            "attribution_id": attr_b,
+            "order_id": a3_order_id,
+            "send_id": send_b,
+            "campaign_id": camp_b,
+            "cart_id": a3_cart["cart_id"],
+            "order_timestamp": a3_order_time,
+            "qualifying_click_at": a3_order_time - timedelta(hours=2),
+            "latency_hours": 2.0,
+            "attributed_revenue": a3_cart["total_amount"],
+            "model": "LAST_CLICK",
+            "created_at": a3_order_time
+        })
 
         a3 = AnomalyFixtureBuilder.create_duplicate_attribution(
             counter=ano_counter,
@@ -766,6 +910,9 @@ class SyntheticDataGenerator:
         a4_cart = carts[20]
         calculated_total = a4_cart["total_amount"]
         stale_stored_total = round(calculated_total + 45.00, 2)
+
+        # Mutate cart stored total so it desynchronizes from cart_lines
+        a4_cart["total_amount"] = stale_stored_total
 
         a4 = AnomalyFixtureBuilder.create_stale_cart_total(
             counter=ano_counter,
@@ -794,8 +941,11 @@ class SyntheticDataGenerator:
         attributions: List[Dict[str, Any]]
     ):
         """Builds comprehensive ground truth labels for suppression, abandonment, and attribution."""
-        # Ground truth for sample carts
-        for cart in carts[:50]:
+        known_anomalous_record_ids = {gt["record_id"] for gt in ground_truth}
+
+        # Ground truth for sample non-anomalous carts (50 baseline)
+        baseline_carts = [c for c in carts if c["cart_id"] not in known_anomalous_record_ids][:50]
+        for cart in baseline_carts:
             is_abandoned = cart["abandoned_at"] is not None
             ground_truth.append({
                 "record_id": cart["cart_id"],
@@ -807,8 +957,9 @@ class SyntheticDataGenerator:
                 "ground_truth_label": "QUALIFIED_ABANDONMENT" if is_abandoned else "ORGANIC_ACTIVE"
             })
 
-        # Ground truth for sample sends
-        for send in send_attempts[:50]:
+        # Ground truth for sample non-anomalous sends (50 baseline)
+        baseline_sends = [s for s in send_attempts if s["send_id"] not in known_anomalous_record_ids][:50]
+        for send in baseline_sends:
             ground_truth.append({
                 "record_id": send["send_id"],
                 "entity": "SendAttempt",
@@ -819,8 +970,9 @@ class SyntheticDataGenerator:
                 "ground_truth_label": send["suppression_reason"] or "LEGITIMATE_SEND"
             })
 
-        # Ground truth for attributions
-        for attr in attributions[:50]:
+        # Ground truth for sample non-anomalous attributions (50 baseline)
+        baseline_attrs = [a for a in attributions if a["order_id"] not in known_anomalous_record_ids][:50]
+        for attr in baseline_attrs:
             ground_truth.append({
                 "record_id": attr["order_id"],
                 "entity": "Order",

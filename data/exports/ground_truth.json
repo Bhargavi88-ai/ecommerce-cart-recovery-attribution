@@ -171,15 +171,6 @@
     "ground_truth_label": "ORGANIC_ACTIVE"
   },
   {
-    "record_id": "CART-2026-000016",
-    "entity": "Cart",
-    "anomaly_type": "NONE_BASELINE",
-    "issue_type": "NONE_BASELINE",
-    "expected_decision": "ACTIVE",
-    "actual_decision": "ACTIVE",
-    "ground_truth_label": "ORGANIC_ACTIVE"
-  },
-  {
     "record_id": "CART-2026-000017",
     "entity": "Cart",
     "anomaly_type": "NONE_BASELINE",
@@ -214,15 +205,6 @@
     "expected_decision": "ACTIVE",
     "actual_decision": "RECOVERED",
     "ground_truth_label": "ORGANIC_ACTIVE"
-  },
-  {
-    "record_id": "CART-2026-000021",
-    "entity": "Cart",
-    "anomaly_type": "NONE_BASELINE",
-    "issue_type": "NONE_BASELINE",
-    "expected_decision": "ABANDONED",
-    "actual_decision": "SUPPRESSED",
-    "ground_truth_label": "QUALIFIED_ABANDONMENT"
   },
   {
     "record_id": "CART-2026-000022",
@@ -478,6 +460,24 @@
   },
   {
     "record_id": "CART-2026-000050",
+    "entity": "Cart",
+    "anomaly_type": "NONE_BASELINE",
+    "issue_type": "NONE_BASELINE",
+    "expected_decision": "ACTIVE",
+    "actual_decision": "ACTIVE",
+    "ground_truth_label": "ORGANIC_ACTIVE"
+  },
+  {
+    "record_id": "CART-2026-000051",
+    "entity": "Cart",
+    "anomaly_type": "NONE_BASELINE",
+    "issue_type": "NONE_BASELINE",
+    "expected_decision": "ACTIVE",
+    "actual_decision": "ACTIVE",
+    "ground_truth_label": "ORGANIC_ACTIVE"
+  },
+  {
+    "record_id": "CART-2026-000052",
     "entity": "Cart",
     "anomaly_type": "NONE_BASELINE",
     "issue_type": "NONE_BASELINE",

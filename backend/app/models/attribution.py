@@ -8,7 +8,7 @@ class Attribution(Base):
     __tablename__ = "attributions"
 
     attribution_id = Column(String(32), primary_key=True, index=True)  # ATTR-2026-000001
-    order_id = Column(String(32), ForeignKey("orders.order_id", ondelete="CASCADE"), nullable=False, unique=True, index=True)
+    order_id = Column(String(32), ForeignKey("orders.order_id", ondelete="CASCADE"), nullable=False, index=True)
     send_id = Column(String(32), ForeignKey("send_attempts.send_id", ondelete="CASCADE"), nullable=False, index=True)
     campaign_id = Column(String(32), ForeignKey("campaigns.campaign_id", ondelete="CASCADE"), nullable=False, index=True)
     cart_id = Column(String(32), ForeignKey("carts.cart_id", ondelete="SET NULL"), nullable=True, index=True)

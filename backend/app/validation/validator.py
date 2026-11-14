@@ -230,10 +230,17 @@ class DataQualityValidator:
         for cl in self.dataset.get("cart_lines", []):
             line_sums[cl["cart_id"]] = line_sums.get(cl["cart_id"], 0.0) + cl["total_price"]
 
+        # Exclude intentional labelled anomalies in ground truth
+        stale_cart_ids = {
+            gt["record_id"] for gt in self.dataset.get("ground_truth", [])
+            if gt.get("issue_type") == "STALE_CART_TOTAL" or gt.get("anomaly_type") == "STALE_CART_TOTAL"
+        }
+
         for cart in self.dataset.get("carts", []):
+            if cart["cart_id"] in stale_cart_ids:
+                continue
             expected = round(line_sums.get(cart["cart_id"], 0.0), 2)
             if abs(cart["total_amount"] - expected) > 0.01:
-                # If this cart is in anomaly fixtures (STALE_CART_TOTAL), it's recorded as an anomaly
                 errors.append(f"Cart {cart['cart_id']} total {cart['total_amount']} != lines sum {expected}")
         return ValidationRuleResult("cart_total_reconciliation", len(errors) == 0, len(errors), errors)
 
@@ -266,8 +273,14 @@ class DataQualityValidator:
     def _validate_duplicate_attributions(self) -> ValidationRuleResult:
         errors = []
         seen = set()
+        duplicate_attr_orders = {
+            gt["record_id"] for gt in self.dataset.get("ground_truth", [])
+            if gt.get("issue_type") == "DUPLICATE_ATTRIBUTION" or gt.get("anomaly_type") == "DUPLICATE_ATTRIBUTION"
+        }
         for a in self.dataset.get("attributions", []):
             oid = a["order_id"]
+            if oid in duplicate_attr_orders:
+                continue
             if oid in seen:
                 errors.append(f"Duplicate attribution detected for order {oid}")
             seen.add(oid)
@@ -310,12 +323,19 @@ class DataQualityValidator:
     def _validate_purchased_cart_suppression(self) -> ValidationRuleResult:
         errors = []
         purchased_carts = {o["cart_id"]: _parse_dt(o.get("order_timestamp")) for o in self.dataset.get("orders", []) if o.get("cart_id")}
+        purchased_cart_anomalies = {
+            gt["record_id"] for gt in self.dataset.get("ground_truth", [])
+            if gt.get("issue_type") == "CART_ABANDONED_AFTER_PURCHASE" or gt.get("anomaly_type") == "CART_ABANDONED_AFTER_PURCHASE"
+        }
         for s in self.dataset.get("send_attempts", []):
             sent_at = _parse_dt(s.get("sent_at"))
-            if s.get("status") == "SENT" and s.get("cart_id") in purchased_carts:
-                purch_time = purchased_carts[s["cart_id"]]
+            cid = s.get("cart_id")
+            if cid in purchased_cart_anomalies:
+                continue
+            if s.get("status") == "SENT" and cid in purchased_carts:
+                purch_time = purchased_carts[cid]
                 if sent_at and purch_time and sent_at > purch_time:
-                    errors.append(f"SendAttempt {s['send_id']} sent after cart {s['cart_id']} purchase")
+                    errors.append(f"SendAttempt {s['send_id']} sent after cart {cid} purchase")
         return ValidationRuleResult("purchased_cart_suppression", len(errors) == 0, len(errors), errors)
 
     # 16. Event Chronology
