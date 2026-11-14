@@ -63,7 +63,7 @@ class DatasetExporter:
         pd.DataFrame(val_report_rows).to_csv(val_report_path, index=False)
 
         # 5. Export SQL Seed Script
-        self._export_sql_seed(dataset)
+        self._export_sql_seed(dataset, scale=scale, seed=seed)
 
         # 6. Generate Provenance Manifest
         manifest = ManifestGenerator.generate_manifest(
@@ -87,27 +87,21 @@ class DatasetExporter:
             df[col] = df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
         df.to_csv(filepath, index=False)
 
-    def _export_sql_seed(self, dataset: Dict[str, Any]):
+    def _export_sql_seed(self, dataset: Dict[str, Any], scale: str = "starter", seed: int = 20261022):
+        from app.exports.sql_exporter import write_sql_seed_file
+
         seed_path = os.path.join(self.export_dir, "seed.sql")
-        with open(seed_path, "w", encoding="utf-8") as f:
-            f.write("-- Synthetic Seed Data for Abandoned Cart Recovery System\n")
-            f.write("-- Scale: Synthetic Data Generator (Seed: 20261022)\n\n")
+        if scale == "starter":
+            write_sql_seed_file(dataset, seed_path, scale="starter", seed=seed)
+        else:
+            # Full scale: export full SQL to seed_full.sql if explicitly requested via environment flag
+            if os.getenv("EXPORT_FULL_SQL", "").lower() in ("1", "true", "yes"):
+                full_path = os.path.join(self.export_dir, "seed_full.sql")
+                write_sql_seed_file(dataset, full_path, scale="full", seed=seed)
 
-            # Products insert
-            products = dataset.get("products", [])
-            for p in products:
-                f.write(
-                    f"INSERT INTO products (product_id, sku, name, category, price, is_active) "
-                    f"VALUES ('{p['product_id']}', '{p['sku']}', '{p['name'].replace("'", "''")}', "
-                    f"'{p['category']}', {p['price']}, 1) ON DUPLICATE KEY UPDATE is_active=1;\n"
-                )
-
-            # Campaigns insert
-            campaigns = dataset.get("campaigns", [])
-            for c in campaigns:
-                f.write(
-                    f"INSERT INTO campaigns (campaign_id, name, channel, trigger_delay_minutes, discount_percent, is_active, created_at) "
-                    f"VALUES ('{c['campaign_id']}', '{c['name'].replace("'", "''")}', '{c['channel']}', "
-                    f"{c['trigger_delay_minutes']}, {c['discount_percent']}, 1, '{c['created_at'].strftime('%Y-%m-%d %H:%M:%S')}');\n"
-                )
+            # Keep seed.sql deterministic and committed at starter scale (<5 MB, git-safe)
+            from app.generator.synthetic_data_generator import SyntheticDataGenerator
+            starter_gen = SyntheticDataGenerator(scale="starter", seed=seed)
+            starter_data = starter_gen.generate_dataset()
+            write_sql_seed_file(starter_data, seed_path, scale="starter", seed=seed)
 

@@ -98,9 +98,9 @@
       "size_bytes": 840
     },
     "seed.sql": {
-      "sha256": "fb11b1d415538a2b75db913973de883fd53773bbdf3d371f2468189a8e04a4dd",
-      "row_count": 26,
-      "size_bytes": 4933
+      "sha256": "7eb52719ae32a229b9f31318bdc3769e7d1fb377e7a464e4a1472312d13226c3",
+      "row_count": 13827,
+      "size_bytes": 3269561
     }
   }
 }

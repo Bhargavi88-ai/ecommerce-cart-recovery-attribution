@@ -49,6 +49,11 @@ Thumbs.db
 # Logs
 *.log
 
+# Large SQL Dumps
+*full*.sql
+*seed_full*.sql
+*.large.sql
+
 # Test runs
 run*/
 a.txt
