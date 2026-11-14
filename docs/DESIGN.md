@@ -44,14 +44,22 @@ Consent is independently managed for `EMAIL` and `SMS`:
 - **Single Winner Principle:** If multiple campaign clicks precede the order, the latest click is deterministically awarded primary attribution.
 - **Anti-Double-Counting:** Exactly one primary attribution record is created per order. Original competing claims are preserved in audit metadata.
 
-### 2.6 Isolated Labelled Anomaly Injection
-Four production anomalies are explicitly injected via `AnomalyFixtureBuilder` into dedicated fixtures and tracked in `anomaly_records` and `ground_truth.csv`:
-1. `MESSAGE_AFTER_OPTOUT`: Message dispatched after consent withdrawal.
-2. `CART_ABANDONED_AFTER_PURCHASE`: Cart marked abandoned despite completed prior purchase.
-3. `DUPLICATE_ATTRIBUTION`: Two competing campaigns claiming primary conversion on the same order.
-4. `STALE_CART_TOTAL`: Cart total out of sync with calculated sum of line items.
+### 2.6 Isolated Labelled Anomaly Injection & Volume Targets
+The system enforces rigorous full-scale target volumes:
+- **Customers:** 25,000
+- **Total Carts:** 50,000
+- **Total Send Attempts:** 13,203 (10,001 `SENT` and 3,202 `SUPPRESSED`)
+- **Orders:** 12,644
+- **Attributions:** 710
+- **Cart Lifecycle:** Carts transition across `ACTIVE`, `ABANDONED`, `CAMPAIGN_SCHEDULED`, `ELIGIBLE`, `SUPPRESSED`, and to `RECOVERED` when purchased following recovery communication.
 
-Baseline records remain pristine and unmodified.
+To test governance and detection pipelines without corrupting normal baseline behavior, exactly **one labelled example** per anomaly category (4 anomalies total) is explicitly injected via `AnomalyFixtureBuilder`, tracked with dedicated `99`-series IDs (`SEND-2026-999901`, `CART-2026-000016`, `ORD-2026-999903`, `CART-2026-000021`):
+1. `MESSAGE_AFTER_OPTOUT`: `SEND-2026-999901` dispatched after consent withdrawal.
+2. `CART_ABANDONED_AFTER_PURCHASE`: `CART-2026-000016` marked abandoned despite completed prior purchase (`ORD-2026-999902`).
+3. `DUPLICATE_ATTRIBUTION`: `ORD-2026-999903` double-claimed by competing campaigns (`ATTR-2026-999901`, `ATTR-2026-999902`).
+4. `STALE_CART_TOTAL`: `CART-2026-000021` stored total ($390.00) out of sync with calculated line sum ($345.00).
+
+The automated detection suite (`detect_anomalies.py`) evaluates point-in-time state and asserts `len(detected) == 4` with zero unlabelled extras. Baseline records remain pristine and unmodified.
 
 ---
 

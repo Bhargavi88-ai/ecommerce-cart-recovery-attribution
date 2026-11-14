@@ -194,24 +194,48 @@ cd frontend && npm install && npm run dev
 
 ### Execute Pytest Test Suite
 ```bash
-cd backend
 pytest -v
 ```
-All 29 tests execute across:
+All 43 tests pass (100% pass rate) across 31 test suites:
 - Deterministic ID generator conventions (`CUS-000001`, `CART-2026-000001`, `SEND-2026-000001`, etc.)
 - Inactivity boundary detection (60 min threshold)
 - Independent Email/SMS consent & opt-out withdrawal suppression
 - 7-day rolling frequency caps (3 messages max)
 - Deterministic last-click attribution selection and competing claims
 - All 4 mandatory labelled anomalies
+- Database rebuild integrity (`db_loader`)
+- Deterministic SQL seed loading and foreign-key check (`sql_exporter`)
 - 16-point relational integrity validation
 - 100% reproducible hash verification
+
+### Database Rebuild & SQL Seed Verification
+```bash
+# Rebuild dashboard database reproducibly:
+python -m backend.app.generator.db_loader --seed 20261022
+
+# Export and verify deterministic SQL seed:
+python -m backend.app.exports.sql_exporter --scale starter --seed 20261022 --out data/exports/seed.sql --verify
+python -m backend.app.exports.sql_exporter --scale full --seed 20261022 --out data/exports/seed_full.sql
+```
+
+### CLI Verification Scripts
+Run independent verification scripts directly against generated datasets (e.g. `run1`):
+```bash
+# 1. 16-point Data Quality Validation:
+python validate.py --data run1
+
+# 2. 7-Day Rolling Frequency Cap Check (0 customers over cap):
+python check_cap.py --data run1
+
+# 3. Deterministic Anomaly Detection (4/4 matched, 0 unlabelled extras):
+python detect_anomalies.py --data run1
+```
 
 ### Execute Reproducibility Verification
 ```bash
 python scripts/run_reproducibility_test.py
 ```
-Generates the dataset twice with seed `20261022` and verifies 0 checksum discrepancies.
+Generates the dataset twice with seed `20261022` and verifies 0 checksum discrepancies across all exported files.
 
 ---
 
