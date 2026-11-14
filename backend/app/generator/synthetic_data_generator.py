@@ -699,9 +699,15 @@ class SyntheticDataGenerator:
         # Anomaly 1: MESSAGE_AFTER_OPTOUT
         ano_counter += 1
         purchased_cart_set = {o["cart_id"] for o in orders if o.get("cart_id")}
-        unpurchased_carts = [c for c in carts if c["cart_id"] not in purchased_cart_set]
-        a1_cart = unpurchased_carts[10] if len(unpurchased_carts) > 10 else unpurchased_carts[0]
-        a1_cust = next(c for c in customers if c["customer_id"] == a1_cart["customer_id"])
+        existing_send_custs = {s["customer_id"] for s in send_attempts}
+        # Choose customer with no other sends and an unpurchased cart to prevent unlabelled extra violations
+        valid_candidates = [
+            c for c in customers
+            if c["customer_id"] not in existing_send_custs
+            and any(cart["cart_id"] not in purchased_cart_set for cart in carts if cart["customer_id"] == c["customer_id"])
+        ]
+        a1_cust = valid_candidates[0] if valid_candidates else customers[10]
+        a1_cart = next(cart for cart in carts if cart["customer_id"] == a1_cust["customer_id"] and cart["cart_id"] not in purchased_cart_set)
         a1_send_id = send_id(999901)
         optout_time = a1_cust["created_at"] + timedelta(days=2)
         sent_after_optout_time = optout_time + timedelta(hours=5)
