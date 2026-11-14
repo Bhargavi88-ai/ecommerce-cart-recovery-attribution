@@ -154,22 +154,21 @@ def main():
     parser.add_argument("--scale", type=str, default="starter", choices=["starter", "full"], help="Dataset scale")
     parser.add_argument("--seed", type=int, default=20261022, help="Deterministic random seed")
     parser.add_argument("--out", type=str, default="data/exports/seed.sql", help="Output SQL filepath")
-    parser.add_argument("--verify", action="store_true", help="Verify loading into in-memory SQLite database")
+    parser.add_argument("--verify", action="store_true", help="Verify loading into in-memory SQLite database after export")
     args = parser.parse_args()
 
     out_path = os.path.abspath(args.out)
 
-    if not args.verify or not os.path.exists(out_path):
-        print(f"Generating {args.scale.upper()} dataset with seed {args.seed}...")
-        gen = SyntheticDataGenerator(scale=args.scale, seed=args.seed)
-        dataset = gen.generate_dataset()
+    print(f"Generating {args.scale.upper()} dataset with seed {args.seed}...")
+    gen = SyntheticDataGenerator(scale=args.scale, seed=args.seed)
+    dataset = gen.generate_dataset()
 
-        print(f"Exporting SQL seed to {out_path}...")
-        write_sql_seed_file(dataset, out_path, scale=args.scale, seed=args.seed)
-        file_size_mb = os.path.getsize(out_path) / (1024 * 1024)
-        print(f"Successfully wrote SQL seed ({file_size_mb:.2f} MB) to {out_path}!")
+    print(f"Exporting SQL seed to {out_path}...")
+    write_sql_seed_file(dataset, out_path, scale=args.scale, seed=args.seed)
+    file_size_mb = os.path.getsize(out_path) / (1024 * 1024)
+    print(f"Successfully wrote SQL seed ({file_size_mb:.2f} MB) to {out_path}!")
 
-    if args.verify or True:
+    if args.verify:
         print("\nVerifying SQL seed loading and foreign-key integrity...")
         counts = verify_sql_seed_loading(out_path)
         print("============================================================")
