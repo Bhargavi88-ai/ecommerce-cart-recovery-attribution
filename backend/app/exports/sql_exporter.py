@@ -96,7 +96,13 @@ def generate_sql_seed(
         lines.append(f"\n-- Table: {tbl_name} ({len(records)} rows)")
         col_list_str = ", ".join(cols)
         for rec in records:
-            val_list_str = ", ".join(format_sql_value(rec.get(c)) for c in cols)
+            vals = []
+            for c in cols:
+                val = rec.get(c)
+                if tbl_name == "anomaly_records" and c == "detected_at":
+                    val = "2026-10-22 00:00:00"
+                vals.append(format_sql_value(val))
+            val_list_str = ", ".join(vals)
             lines.append(f"INSERT INTO {tbl_name} ({col_list_str}) VALUES ({val_list_str});")
 
     lines.append("\nCOMMIT;\n")

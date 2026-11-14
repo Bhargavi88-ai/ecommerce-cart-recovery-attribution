@@ -54,3 +54,4 @@ def test_starter_seed_sql_loading_and_integrity():
     script_1 = generate_sql_seed(expected_data, scale=scale, seed=seed)
     script_2 = generate_sql_seed(expected_data, scale=scale, seed=seed)
     assert script_1 == script_2, "SQL seed generation must be bitwise deterministic"
+
