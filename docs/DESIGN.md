@@ -61,12 +61,12 @@ To test governance and detection pipelines without corrupting normal baseline be
 
 The automated detection suite (`detect_anomalies.py`) evaluates point-in-time state and asserts `len(detected) == 4` with zero unlabelled extras. Baseline records remain pristine and unmodified.
 
-### 2.7 Simulated Communication Telemetry Calibration
-Communication events (`DELIVERED`, `OPENED`, `CLICKED`) are calibrated to mirror realistic e-commerce recovery funnels:
-- **Delivery Rate:** Calibrated to ~96.03% (9,604 delivered out of 10,001 dispatched messages).
-- **Open Rate:** Calibrated to 55.95% (5,373 opened messages out of 9,604 delivered).
-- **Click Rate:** Calibrated to ~30.26% (1,626 clicked messages out of 5,373 opened).
-- Strict chronological simulation guarantees $t_{\text{scheduled}} \le t_{\text{sent}} \le t_{\text{delivered}} \le t_{\text{opened}} \le t_{\text{clicked}}$.
+### 2.7 Simulated Communication Telemetry
+Delivery, open and click events are generated at fixed target rates chosen for plausibility, not calibrated against real campaign data (no external dataset is used):
+- **Delivery rate:** ~96.03% (9,604 delivered of 10,001 sent).
+- **Open rate:** 55.95% (5,373 opened of 9,604 delivered).
+- **Click-to-open rate:** ~30.26% (1,626 clicked of 5,373 opened). Clicks per delivered message are ~16.9%.
+Abandoned-cart emails typically perform better than ordinary marketing email, but these values sit at the high end. Treat them as illustrative, not as benchmarks.
 
 ### 2.8 Deterministic SQL Seed & Export Strategy
 To enable reproducible database bootstrapping without bloating version control:
