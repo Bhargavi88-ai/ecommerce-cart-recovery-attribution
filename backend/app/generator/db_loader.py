@@ -1,5 +1,15 @@
+import os
+import sys
+import argparse
+from typing import Dict, Any, List, Optional
 from sqlalchemy.orm import Session
-from typing import Dict, Any, List
+
+# Ensure backend root is on sys.path
+backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if backend_dir not in sys.path:
+    sys.path.insert(0, backend_dir)
+
+from app.database import engine as default_engine, SessionLocal as default_session_factory, Base
 from app.models.customer import Customer
 from app.models.product import Product
 from app.models.consent import Consent
@@ -11,6 +21,7 @@ from app.models.communication_event import CommunicationEvent
 from app.models.order import Order, OrderLine
 from app.models.attribution import Attribution
 from app.models.anomaly import AnomalyRecord
+from app.generator.synthetic_data_generator import SyntheticDataGenerator
 
 
 def populate_database_from_dataset(db: Session, dataset: Dict[str, Any]):
@@ -236,3 +247,74 @@ def populate_database_from_dataset(db: Session, dataset: Dict[str, Any]):
 
     db.commit()
 
+
+def rebuild_database(
+    seed: int = 20261022,
+    scale: str = "full",
+    engine=None,
+    session_factory=None
+) -> Dict[str, int]:
+    """
+    Rebuilds the dashboard database reproducibly:
+    1. Creates/re-creates tables, clearing existing rows.
+    2. Generates the dataset using SyntheticDataGenerator with the given seed and scale.
+    3. Calls populate_database_from_dataset.
+    4. Queries and prints row counts per table.
+    """
+    target_engine = engine or default_engine
+    target_session_factory = session_factory or default_session_factory
+
+    # 1. Clear existing rows and create tables
+    Base.metadata.drop_all(bind=target_engine)
+    Base.metadata.create_all(bind=target_engine)
+
+    # 2. Generate dataset
+    gen = SyntheticDataGenerator(scale=scale, seed=seed)
+    dataset = gen.generate_dataset()
+
+    # 3. Populate database
+    db = target_session_factory()
+    try:
+        populate_database_from_dataset(db, dataset)
+    finally:
+        db.close()
+
+    # 4. Query row counts per table
+    db = target_session_factory()
+    try:
+        counts = {
+            "customers": db.query(Customer).count(),
+            "carts": db.query(Cart).count(),
+            "send_attempts": db.query(SendAttempt).count(),
+            "orders": db.query(Order).count(),
+            "attributions": db.query(Attribution).count(),
+            "products": db.query(Product).count(),
+            "consents": db.query(Consent).count(),
+            "sessions": db.query(DbSession).count(),
+            "campaigns": db.query(Campaign).count(),
+            "message_templates": db.query(MessageTemplate).count(),
+            "cart_lines": db.query(CartLine).count(),
+            "order_lines": db.query(OrderLine).count(),
+            "communication_events": db.query(CommunicationEvent).count(),
+            "anomaly_records": db.query(AnomalyRecord).count(),
+        }
+    finally:
+        db.close()
+
+    print("============================================================")
+    print(" Dashboard Database Rebuild Complete")
+    print(f" Scale: {scale.upper()} | Seed: {seed}")
+    print("============================================================")
+    for tbl, cnt in counts.items():
+        print(f" {tbl:<25}: {cnt:,}")
+    print("============================================================")
+
+    return counts
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Rebuild Dashboard Database")
+    parser.add_argument("--seed", type=int, default=20261022, help="Deterministic random seed")
+    parser.add_argument("--scale", type=str, default="full", choices=["starter", "full"], help="Dataset scale (starter, full)")
+    args = parser.parse_args()
+    rebuild_database(seed=args.seed, scale=args.scale)
