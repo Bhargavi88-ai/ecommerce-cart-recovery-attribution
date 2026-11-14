@@ -167,21 +167,26 @@ Generated outputs are populated directly into the database and written to `data/
 
 ## 5. Running the Application
 
-### Start Backend API Server
-```bash
-cd backend
-python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-- API Base: `http://localhost:8000/api`
-- Swagger Documentation: `http://localhost:8000/docs`
-- Redoc Documentation: `http://localhost:8000/redoc`
+### Quickstart (Single-Command Reproducible Launch)
 
-### Start Frontend Application
+From the project root:
+
 ```bash
-cd frontend
-npm run dev
+# 1. Rebuild SQLite database reproducibly
+python -m backend.app.generator.db_loader --seed 20261022
+
+# 2. Launch FastAPI backend API server
+python -m uvicorn backend.app.main:app --port 8000
+
+# 3. Launch React frontend dashboard
+cd frontend && npm install && npm run dev
 ```
-Open your browser at `http://localhost:5173`.
+
+### URLs & Endpoints
+- **Frontend Dashboard**: `http://localhost:5173`
+- **Backend API Base**: `http://localhost:8000/api`
+- **Swagger Interactive Docs**: `http://localhost:8000/docs`
+- **Healthcheck**: `http://localhost:8000/health`
 
 ---
 
