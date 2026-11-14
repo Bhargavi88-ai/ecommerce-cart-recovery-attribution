@@ -61,6 +61,18 @@ To test governance and detection pipelines without corrupting normal baseline be
 
 The automated detection suite (`detect_anomalies.py`) evaluates point-in-time state and asserts `len(detected) == 4` with zero unlabelled extras. Baseline records remain pristine and unmodified.
 
+### 2.7 Simulated Communication Telemetry Calibration
+Communication events (`DELIVERED`, `OPENED`, `CLICKED`) are calibrated to mirror realistic e-commerce recovery funnels:
+- **Delivery Rate:** Calibrated to ~96.03% (9,604 delivered out of 10,001 dispatched messages).
+- **Open Rate:** Calibrated to 55.95% (5,373 opened messages out of 9,604 delivered).
+- **Click Rate:** Calibrated to ~30.26% (1,626 clicked messages out of 5,373 opened).
+- Strict chronological simulation guarantees $t_{\text{scheduled}} \le t_{\text{sent}} \le t_{\text{delivered}} \le t_{\text{opened}} \le t_{\text{clicked}}$.
+
+### 2.8 Deterministic SQL Seed & Export Strategy
+To enable reproducible database bootstrapping without bloating version control:
+- **Starter SQL Seed:** A complete schema and data script (`data/exports/seed.sql`, ~3.12 MB, ~13,800 lines) generated at starter scale is committed directly to Git, allowing instant in-memory SQLite initialization for automated tests.
+- **Full-Scale SQL Export:** Full-scale SQL generation produces `data/exports/seed_full.sql` (~77.29 MB, 337,454 statements across all 14 tables) via `python -m backend.app.exports.sql_exporter --scale full --seed 20261022 --out data/exports/seed_full.sql`. Because its size (~77 MB) exceeds Git's 50 MB warning threshold, `seed_full.sql` is gitignored while remaining 100% bitwise deterministic.
+
 ---
 
 ## 3. Data Quality & Integrity Validation
