@@ -51,7 +51,7 @@ The system enforces rigorous full-scale target volumes:
 - **Total Send Attempts:** 13,203 (10,001 `SENT` and 3,202 `SUPPRESSED`)
 - **Orders:** 12,644
 - **Attributions:** 710
-- **Cart Lifecycle:** Carts transition across `ACTIVE`, `ABANDONED`, `CAMPAIGN_SCHEDULED`, `ELIGIBLE`, `SUPPRESSED`, and to `RECOVERED` when purchased following recovery communication.
+- **Cart Lifecycle & RECOVERED Semantics:** Carts transition across `ACTIVE`, `ABANDONED`, `CAMPAIGN_SCHEDULED`, `ELIGIBLE`, `SUPPRESSED`, and to `RECOVERED` when an order is placed following recovery communication (`recovered_at` timestamp recorded, status set to `RECOVERED`, and subsequent campaign sends suppressed).
 
 To test governance and detection pipelines without corrupting normal baseline behavior, exactly **one labelled example** per anomaly category (4 anomalies total) is explicitly injected via `AnomalyFixtureBuilder`, tracked with dedicated `99`-series IDs (`SEND-2026-999901`, `CART-2026-000016`, `ORD-2026-999903`, `CART-2026-000021`):
 1. `MESSAGE_AFTER_OPTOUT`: `SEND-2026-999901` dispatched after consent withdrawal.
